@@ -53,8 +53,8 @@ yy=1.4
 rho_L=rho[0]
 rho_R=rho[-1]
 p_L=p[0]
-p_R=p[-1]
-M_s=1.6
+p_R=p[-1] 
+M_s=1.6 #Calculated and rounded from the Compatibility Equation
 a_L=(yy*p_L/rho_L)**0.5
 
 x=np.linspace(0,1,1001)
@@ -64,28 +64,31 @@ rho_Teo,p_Teo,v_Teo=analytic_solution(rho_L,rho_R,p_L,p_R,M_s,a_L,yy,x0,t,x)
 
 
 fig1=plt.figure()
-plt.plot(x,rho)
-plt.plot(x,rho_Teo)
-plt.xlabel("x/L")
-plt.ylabel("rho/rho_R")
+plt.plot(x,rho,label=r'Lax-Wendroff')
+plt.plot(x,rho_Teo,label=r'Exact Solution')
+plt.xlabel(r'$x/L$')
+plt.ylabel(r'$\rho/\rho_R$')
 plt.ylim(0,11)
+plt.legend()
 plt.savefig("density_shock.pdf")
 plt.close()
 
 fig2=plt.figure()
-plt.plot(x,p)
-plt.plot(x,p_Teo)
-plt.xlabel("x/L")
-plt.ylabel("P/(yP_R)")
+plt.plot(x,p,label=r'Lax-Wendroff')
+plt.plot(x,p_Teo,label=r'Exact Solution')
+plt.xlabel(r"$x/L$")
+plt.ylabel(r"$P/(\gamma P_R)$")
 plt.ylim(0,8)
+plt.legend()
 plt.savefig("pressure_shock.pdf")
 plt.close()
 
 fig3=plt.figure()
-plt.plot(x,v)
-plt.plot(x,v_Teo)
-plt.xlabel("x/L")
-plt.ylabel("U/a_R")
+plt.plot(x,v,label='Lax-Wendroff')
+plt.plot(x,v_Teo,label='Exact Solution')
+plt.xlabel(r"$x/L$")
+plt.ylabel(r"$U/a_R$")
 plt.ylim(0,1)
+plt.legend(loc=2)
 plt.savefig("velocity_shock.pdf")
 plt.close()

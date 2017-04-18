@@ -54,7 +54,7 @@ rho_L=rho[0]
 rho_R=rho[-1]
 p_L=p[0]
 p_R=p[-1]
-M_s=1.5
+M_s=1.6
 a_L=(yy*p_L/rho_L)**0.5
 
 x=np.linspace(0,1,1001)
