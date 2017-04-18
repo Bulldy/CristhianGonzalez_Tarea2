@@ -1,0 +1,12 @@
+exec:
+	gcc shock.c -lm -o shock.out
+	gcc sedov.c -lm -o sedov.out
+shock:
+	./shock.out
+sedov:
+	./sedov.out
+plotshock:
+	python shock_plot.py
+plotsedov:
+	python sedov_plot.py
+
