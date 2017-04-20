@@ -41,6 +41,7 @@ int main(){
     w_now[j]=(double *)malloc(3*sizeof(double));
     w_after[j]=(double *)malloc(3*sizeof(double));
   }
+  
   w_init(w_now);
   
   int k,Nt,n;

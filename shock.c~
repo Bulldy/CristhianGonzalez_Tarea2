@@ -44,10 +44,12 @@ int main(){
   w_init(w_now);
   
   int k,Nt,n;
-  double dtp;
+  double dtp,time;
   Nt=1100;
+  time=0;
   for(k=0;k<Nt;k++){
     dtp=delta_time(w_now);
+    time=time+dtp;
     for(j=1;j<M-1;j++){
       laxwendroff_step(w_after[j],w_now[j],w_now[j+1],w_now[j-1],dtp);
     }
@@ -62,7 +64,12 @@ int main(){
   }
   
   write_final_result(w_after);
-  
+
+  FILE *t_file;
+  t_file=fopen("time_shock.txt","w");
+  fprintf(t_file,"%f \n",time);
+  fclose(t_file);
+
   return 0;
 }
 
