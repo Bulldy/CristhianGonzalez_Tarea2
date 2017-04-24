@@ -117,14 +117,10 @@ int main(){
 	}
       }
     }
-    printf("%f\n",w_now[M/2][M/2][M/2][4]);
+    printf("%f\n",w[94][M/2][M/2][1];
     // Time step ends
   }
 
-  printf("%f\n",w_now[M/2][M/2][M/2][4]);
-  printf("%f\n",e_atm);
-  printf("%f\n",w_now[M-1][M-1][M-1][4]);
-  printf("%f\n",w_now[M-1][M/2][M-1][4]);
   return 0;
 }
 
