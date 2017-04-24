@@ -117,7 +117,7 @@ int main(){
 	}
       }
     }
-    printf("%f\n",w_after[94][M/2][M/2][1];
+    printf("%f\n",w_after[94][M/2][M/2][1]);
     // Time step ends
   }
 
