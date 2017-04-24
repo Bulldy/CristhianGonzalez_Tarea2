@@ -15,6 +15,19 @@
 #define E_BOOM 10000000000.0
 
 /*---------------------------------------------------------------------------------------*/
+/*Units of the problem
+ *Constant R only air 286.9 J/(kg*K)
+ *Distance are measure in meters
+ *Heat capacity ratio gamma = cp/cv = 1.4 for diatomic gas no units
+ *Courant number C 0.5 no units
+ *Pressure measure in atm 
+ *Temperature measure in Kelvins
+ *Energy measure in Joules
+*/
+/*---------------------------------------------------------------------------------------*/
+
+
+/*---------------------------------------------------------------------------------------*/
 /*Functions to be defined and used*/
 double delta_time(double ****w);
 double pressure(double energy, double rhoo,double u2);
@@ -68,7 +81,7 @@ int main(){
   double dt;
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
-    printf("%f",dt);
+    printf("%f\n",dt);
     
     // We fix boundary values at atmospheric conditions
     for(i=0;i<M;i++){

@@ -29,6 +29,10 @@
 
 /*---------------------------------------------------------------------------------------*/
 /*Functions to be defined and used*/
+void finite_volume(double *wnext,double *wnow, double *wip1, double *wim1, double *wjp1, double *wjm1, double *wkp1, double *wkm1, double dete);
+void flux(double *F, double *w);
+void glux(double *G, double *w);
+void hlux(double *H, double *w);
 double delta_time(double ****w);
 double pressure(double energy, double rhoo,double u2);
 double speed_sound(double pres, double rho);
@@ -72,12 +76,9 @@ int main(){
     }
   } 
   
-  printf("Inicializo el mierdero\n");
-  printf("%f\n",w_now[M/2][M/2][M/2][4]);
-  
   // We advance our system in timesteps of dt calculated at each step
   int Nt,n,time,l;
-  Nt=1;
+  Nt=100;
   double dt;
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
@@ -101,10 +102,7 @@ int main(){
     for(i=1;i<M-1;i++){
       for(j=1;j<M-1;j++){
         for(k=1;k<M-1;k++){
-          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	  //Aca falta la evolucion temporal 
-	  //Deberiamos hacer una funcion que tome como argumentos
-	  //los 6 vecinos directos y el dt
+          finite_volume(w_after[i][j][k],w_now[i][j][k], w_now[i+1][j][k], w_now[i-1][j][k], w_now[i][j+1][k], w_now[i][j-1][k], w_now[i][j][k+1], w_now[i][j][k-1], dt);
         }
       }
     }
@@ -119,10 +117,14 @@ int main(){
 	}
       }
     }
-
+    printf("%f\n",w_now[M/2][M/2][M/2][4]);
     // Time step ends
   }
 
+  printf("%f\n",w_now[M/2][M/2][M/2][4]);
+  printf("%f\n",e_atm);
+  printf("%f\n",w_now[M-1][M-1][M-1][4]);
+  printf("%f\n",w_now[M-1][M/2][M-1][4]);
   return 0;
 }
 
@@ -137,7 +139,7 @@ int main(){
 double delta_time(double ****w){
   int i, j, k;
   double rhoijk,uijk,vijk,wijk,pijk,eijk,aijk,dt_min,dtu,dtv,dtw;
-  dt_min=1000;
+  dt_min=10;
   for(i=0;i<M;i++){
     for(j=0;j<M;j++){
       for(k=0;k<M;k++){
@@ -164,6 +166,92 @@ double delta_time(double ****w){
     }
   }
   return dt_min;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/*Function to advance the system in time using a finite volume scheme*/
+/*We use a central difference approximation for half values*/
+void finite_volume(double *wnext,double *wnow, double *wip1, double *wim1, double *wjp1, double *wjm1, double *wkp1, double *wkm1, double dete){
+  int l;
+  double *fip12,*fim12,*gjp12,*gjm12,*hkp12,*hkm12;
+  double *wip12,*wim12,*wjp12,*wjm12,*wkp12,*wkm12;
+
+  fip12=(double *)malloc(5*sizeof(double));
+  fim12=(double *)malloc(5*sizeof(double));
+  gjp12=(double *)malloc(5*sizeof(double));
+  gjm12=(double *)malloc(5*sizeof(double));
+  hkp12=(double *)malloc(5*sizeof(double));
+  hkm12=(double *)malloc(5*sizeof(double));
+
+  wip12=(double *)malloc(5*sizeof(double));
+  wim12=(double *)malloc(5*sizeof(double));
+  wjp12=(double *)malloc(5*sizeof(double));
+  wjm12=(double *)malloc(5*sizeof(double));
+  wkp12=(double *)malloc(5*sizeof(double));
+  wkm12=(double *)malloc(5*sizeof(double));
+
+  for(l=0;l<5;l++){
+    wip12[l]=0.5*(wnow[l]+wip1[l]);
+    wim12[l]=0.5*(wnow[l]+wim1[l]);
+    wjp12[l]=0.5*(wnow[l]+wjp1[l]);
+    wjm12[l]=0.5*(wnow[l]+wjm1[l]);
+    wkp12[l]=0.5*(wnow[l]+wkp1[l]);
+    wkm12[l]=0.5*(wnow[l]+wkm1[l]);
+  }
+
+  flux(fip12,wip12);
+  flux(fim12,wim12);
+  glux(gjp12,wjp12);
+  glux(gjm12,wjm12);
+  hlux(hkp12,wkp12);
+  hlux(hkm12,wkm12);
+  
+  for(l=0;l<5;l++){
+    wnext[l]=wnow[l]-(dete/dx)*(fip12[l]-fim12[l])-(dete/dy)*(gjp12[l]-gjm12[l])-(dete/dz)*(hkp12[l]-hkm12[l]);
+  }
+
+}
+
+/*---------------------------------------------------------------------------------------*/
+/*Function to save the flux vector on F given a certain w vector from the Euler equation */
+/* Flux on x direction */
+void flux(double *F, double *w){
+  F[0]=w[1];
+  double p,v2;
+  v2=w[1]*w[1]/(w[0]*w[0])+w[2]*w[2]/(w[0]*w[0])+w[3]*w[3]/(w[0]*w[0]);
+  p=pressure(w[4],w[0],v2);
+  F[1]=w[1]*w[1]/w[0]+p;
+  F[2]=w[1]*w[2]/w[0];
+  F[3]=w[1]*w[3]/w[0];
+  F[4]=(w[4]+p)*(w[1]/w[0]);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/*Function to save the flux vector on G given a certain w vector from the Euler equation */
+/* Flux on y direction */
+void glux(double *G, double *w){
+  G[0]=w[2];
+  G[1]=w[1]*w[2]/w[0];
+  double p,v2;
+  v2=w[1]*w[1]/(w[0]*w[0])+w[2]*w[2]/(w[0]*w[0])+w[3]*w[3]/(w[0]*w[0]);
+  p=pressure(w[4],w[0],v2);
+  G[2]=w[2]*w[2]/w[0]+p;
+  G[3]=w[2]*w[3]/w[0];
+  G[4]=(w[4]+p)*(w[2]/w[0]);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/*Function to save the flux vector on H given a certain w vector from the Euler equation */
+/* Flux on z direction */
+void hlux(double *H, double *w){
+  H[0]=w[3];
+  H[1]=w[1]*w[3]/w[0];
+  double p,v2;
+  v2=w[1]*w[1]/(w[0]*w[0])+w[2]*w[2]/(w[0]*w[0])+w[3]*w[3]/(w[0]*w[0]);
+  p=pressure(w[4],w[0],v2);
+  H[2]=w[2]*w[3]/w[0];
+  H[3]=w[3]*w[3]/w[0]+p;
+  H[4]=(w[4]+p)*(w[3]/w[0]);
 }
 
 /*---------------------------------------------------------------------------------------*/
