@@ -81,8 +81,8 @@ int main(){
   Nt=100;
   double dt;
   for(n=0;n<Nt;n++){
-    //dt=delta_time(w_now);
-    printf("%f\n",dt);
+    dt=delta_time(w_now);
+    //printf("%f\n",dt);
     
     // We fix boundary values at atmospheric conditions
     for(i=0;i<M;i++){

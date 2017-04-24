@@ -81,7 +81,7 @@ int main(){
   Nt=100;
   double dt;
   for(n=0;n<Nt;n++){
-    dt=delta_time(w_now);
+    //dt=delta_time(w_now);
     printf("%f\n",dt);
     
     // We fix boundary values at atmospheric conditions
@@ -117,10 +117,10 @@ int main(){
 	}
       }
     }
-    printf("%f\n",w_after[94][M/2][M/2][1]);
+    //printf("%f\n",w_after[94][M/2][M/2][1]);
     // Time step ends
   }
-
+  printf("%f\n",w_after[M/2+1][M/2][M/2][4]);
   return 0;
 }
 
