@@ -8,7 +8,7 @@
 #define dy 2.0
 #define dz 2.0
 #define g 1.4 
-#define C 0.5
+#define C 0.8
 #define R_air 286.9
 #define P_atm 101325.0
 #define T0 300.0
@@ -77,13 +77,14 @@ int main(){
   } 
   
   // We advance our system in timesteps of dt calculated at each step
-  int Nt,n,time,l;
+  int Nt,n,l;
   Nt=100;
-  double dt;
+  double dt,t_total;
+  t_total=0;
   for(n=0;n<Nt;n++){
-    //dt=delta_time(w_now);
-    printf("%f\n",dt);
-    
+    dt=delta_time(w_now);
+    //printf("%f\n",dt);
+    t_total=t_total+dt;
     // We fix boundary values at atmospheric conditions
     for(i=0;i<M;i++){
       for(j=0;j<M;j++){
@@ -206,6 +207,18 @@ void finite_volume(double *wnext,double *wnow, double *wip1, double *wim1, doubl
     wnext[l]=wnow[l]-(dete/dx)*(fip12[l]-fim12[l])-(dete/dy)*(gjp12[l]-gjm12[l])-(dete/dz)*(hkp12[l]-hkm12[l]);
   }
 
+  free(wip12);
+  free(wim12);
+  free(wjp12);
+  free(wjm12);
+  free(wkp12);
+  free(wkm12);
+  free(fip12);
+  free(fim12);
+  free(gjp12);
+  free(gjm12);
+  free(hkp12);
+  free(hkm12);
 }
 
 /*---------------------------------------------------------------------------------------*/
