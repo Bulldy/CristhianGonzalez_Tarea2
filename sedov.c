@@ -111,9 +111,9 @@ int main(){
     }
 
     // We calculate the new values inside the cube
-#pragma omp parallel
     for(i=1;i<M-1;i++){
       for(j=1;j<M-1;j++){
+#pragma omp parallel for
         for(k=1;k<M-1;k++){
           finite_volume(w_after[i][j][k],w_now[i][j][k], w_now[i+1][j][k], w_now[i-1][j][k], w_now[i][j+1][k], w_now[i][j-1][k], w_now[i][j][k+1], w_now[i][j][k-1], dt);
         }
@@ -149,9 +149,10 @@ double delta_time(double ****w){
   int i, j, k;
   double rhoijk,uijk,vijk,wijk,pijk,eijk,aijk,dt_min,dtu,dtv,dtw;
   dt_min=10;
-#pragma omp parallel for shared(dt_min)
+
   for(i=0;i<M;i++){
     for(j=0;j<M;j++){
+      #pragma omp parallel for
       for(k=0;k<M;k++){
         rhoijk=w[i][j][k][0];
 	eijk=w[i][j][k][4];
