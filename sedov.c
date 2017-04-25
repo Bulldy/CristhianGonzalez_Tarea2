@@ -4,11 +4,11 @@
 #include <string.h>
 #include <time.h>
 #define M 128
-#define dx 2.0
-#define dy 2.0
-#define dz 2.0
+#define dx 2.0/256.0
+#define dy 2.0/256.0
+#define dz 2.0/256.0
 #define g 1.4 
-#define C 0.8
+#define C 0.5
 #define R_air 286.9
 #define P_atm 101325.0
 #define T0 300.0
@@ -43,9 +43,16 @@ double speed_sound(double pres, double rho);
 int main(){
   // We find density and speed of sound at atmospheric conditions with the ideal gas law
   // We find the energy of atmospheric state
-  double rho_atm,e_atm;
+  double rho_atm,e_atm,a_atm;
   rho_atm=P_atm/(R_air*T0);
   e_atm=P_atm/(g-1);
+  a_atm=speed_sound(P_atm,rho_atm);
+  
+  // We turn our initial conditions adimensional
+  double Arho_atm,AE_BOOM,Ae_atm;
+  Arho_atm=1;
+  Ae_atm=e_atm/(rho_atm*a_atm*a_atm);
+  AE_BOOM=E_BOOM/(rho_atm*a_atm*a_atm);
 
   // We initialize our 4d array,indexed by i,j,k for position in space
   // Each i,j,k will hold a 5-component vector
@@ -64,13 +71,13 @@ int main(){
       for(k=0;k<M;k++){
 	w_now[i][j][k]=(double *)malloc(5*sizeof(double));
 	w_after[i][j][k]=(double *)malloc(5*sizeof(double));
-	w_now[i][j][k][0]=rho_atm;
+	w_now[i][j][k][0]=Arho_atm;
 	w_now[i][j][k][1]=0.0;
 	w_now[i][j][k][2]=0.0;
 	w_now[i][j][k][3]=0.0;
 	w_now[i][j][k][4]=e_atm;
 	if(i==M/2 && j==M/2 && k==M/2){
-	  w_now[i][j][k][4]=E_BOOM;
+	  w_now[i][j][k][4]=AE_BOOM;
 	}
       }
     }
