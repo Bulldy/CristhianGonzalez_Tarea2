@@ -8,7 +8,7 @@
 #define dy 2.0/256.0
 #define dz 2.0/256.0
 #define g 1.4 
-#define C 0.8
+#define C 0.5
 #define R_air 286.9
 #define P_atm 101325.0
 #define T0 300.0
@@ -90,7 +90,7 @@ int main(){
   t_total=0;
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
-    printf("%f y %f\n",dt,t_total);
+    printf("dt=%f t=%f E=%f r(10)=%f \n",dt*256.0/a_atm,t_total*256.0/a_atm,w_after[M/2][M/2][M/2][4],w_after[M/2][M/2][M/2+5][0]);
     t_total=t_total+dt;
     // We fix boundary values at atmospheric conditions
     for(i=0;i<M;i++){
