@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
+#include "omp.h"
 #define M 128
 #define dx 2.0/256.0
 #define dy 2.0/256.0
@@ -41,6 +42,9 @@ double speed_sound(double pres, double rho);
 /*---------------------------------------------------------------------------------------*/
 /*START OF MAIN*/
 int main(){
+  int proc;
+  proc=4;
+  omp_set_num_threads(proc);
   // We find density and speed of sound at atmospheric conditions with the ideal gas law
   // We find the energy of atmospheric state
   double rho_atm,e_atm,a_atm;
@@ -107,6 +111,7 @@ int main(){
     }
 
     // We calculate the new values inside the cube
+#pragma omp parallel
     for(i=1;i<M-1;i++){
       for(j=1;j<M-1;j++){
         for(k=1;k<M-1;k++){
@@ -144,6 +149,7 @@ double delta_time(double ****w){
   int i, j, k;
   double rhoijk,uijk,vijk,wijk,pijk,eijk,aijk,dt_min,dtu,dtv,dtw;
   dt_min=10;
+#pragma omp parallel for shared(dt_min)
   for(i=0;i<M;i++){
     for(j=0;j<M;j++){
       for(k=0;k<M;k++){

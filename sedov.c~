@@ -75,7 +75,7 @@ int main(){
 	w_now[i][j][k][1]=0.0;
 	w_now[i][j][k][2]=0.0;
 	w_now[i][j][k][3]=0.0;
-	w_now[i][j][k][4]=e_atm;
+	w_now[i][j][k][4]=Ae_atm;
 	if(i==M/2 && j==M/2 && k==M/2){
 	  w_now[i][j][k][4]=AE_BOOM;
 	}
@@ -90,7 +90,7 @@ int main(){
   t_total=0;
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
-    printf("dt=%f t=%f E=%f r(10)=%f \n",dt*256.0/a_atm,t_total*256.0/a_atm,w_after[M/2][M/2][M/2][4],w_after[M/2][M/2][M/2+5][0]);
+    printf("dt=%f t=%f E=%f r(10)=%f \n",dt*256.0/a_atm,t_total*256.0/a_atm,w_now[M/2][M/2][M/2][4],w_now[M/2][M/2][M/2+5][0]);
     t_total=t_total+dt;
     // We fix boundary values at atmospheric conditions
     for(i=0;i<M;i++){
