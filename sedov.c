@@ -14,6 +14,7 @@
 #define P_atm 101325.0
 #define T0 300.0
 #define E_BOOM 10000000000.0
+#define PI 3.14159265358979323846
 
 /*---------------------------------------------------------------------------------------*/
 /*Units of the problem
@@ -25,6 +26,7 @@
  *Temperature measure in Kelvins
  *Energy measure in Joules
 */
+
 /*---------------------------------------------------------------------------------------*/
 
 
@@ -77,21 +79,41 @@ int main(){
       for(k=0;k<M;k++){
 	w_now[i][j][k]=(double *)malloc(5*sizeof(double));
 	w_after[i][j][k]=(double *)malloc(5*sizeof(double));
-	w_now[i][j][k][0]=Arho_atm;
-	w_now[i][j][k][1]=0.0;
-	w_now[i][j][k][2]=0.0;
-	w_now[i][j][k][3]=0.0;
-	w_now[i][j][k][4]=Ae_atm;
-	if(i==M/2 && j==M/2 && k==M/2){
-	  w_now[i][j][k][4]=AE_BOOM;
-	}
       }
     }
   } 
+
+  for(i=0;i<M;i++){
+    for(j=0;j<M;j++){
+      for(k=0;k<M;k++){
+	w_now[i][j][k][0]=Arho_atm;
+	w_now[i][j][k][1]=0.0;
+        w_now[i][j][k][2]=0.0;
+	w_now[i][j][k][3]=0.0;
+        w_now[i][j][k][4]=Ae_atm;
+	if(i==M/2 && j==M/2 && k==M/2){
+	  w_now[i][j][k][4]=3*AE_BOOM/(4*PI);
+	  w_now[i][j][k+1][4]=3*AE_BOOM/(4*PI);
+	  w_now[i][j][k-1][4]=3*AE_BOOM/(4*PI);
+	  w_now[i][j+1][k][4]=3*AE_BOOM/(4*PI);
+	  w_now[i][j-1][k][4]=3*AE_BOOM/(4*PI);
+	  w_now[i+1][j][k][4]=3*AE_BOOM/(4*PI);
+	  w_now[i-1][j][k][4]=3*AE_BOOM/(4*PI);
+	}
+      }
+    }
+  }
+  
+  // We write the files in case we don't reach any one radii
+  /*FILE *filer10;
+  FILE *filer60;
+  FILE *filer120;*/
+  
+  
   
   // We advance our system in timesteps of dt calculated at each step
   int Nt,n,l;
-  Nt=5;
+  Nt=1000;
   
   double dt,t_total;
   t_total=0.0;
@@ -104,6 +126,8 @@ int main(){
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
     //printf("dt=%f t=%f E=%f r(10)=%f \n",dt*256.0/a_atm,t_total*256.0/a_atm,w_now[M/2][M/2][M/2][4],w_now[M/2][M/2][M/2+5][0]);
+    printf("%.20f\t%.20f\t%.20f\t%.20f\t%.20f\t%.20f\n",w_now[M/2][M/2][M/2][0],w_now[M/2][M/2][M/2+2][0],w_now[M/2][M/2][M/2+4][0],w_now[M/2][M/2][M/2+6][0],w_now[M/2][M/2][M/2+8][0],w_now[M/2][M/2][M/2+10][0]);
+
     t_total=t_total+dt;
 
     // We calculate the new values inside the cube
@@ -129,18 +153,18 @@ int main(){
     
     // Check if wave is at 10, 60 or 120
     if(ten==0 && sixty==0 && htwenty==0){
-      ten=check_wave(10,w_now,t_total);
-      printf("10 \n");
+      ten=check_wave(2,w_now,t_total);
+      //printf("10 \n");
     } 
 
     if(ten!=0 && sixty==0 && htwenty==0){
-      printf("60 \n");
-      sixty=check_wave(60,w_now,t_total);
+      //printf("60 \n");
+      sixty=check_wave(4,w_now,t_total);
     }
 
     if(ten!=0 && sixty!=0 && htwenty==0){
-      printf("120 \n");
-      htwenty=check_wave(120,w_now,t_total);
+      //printf("120 \n");
+      htwenty=check_wave(6,w_now,t_total);
       break;
     }
     
