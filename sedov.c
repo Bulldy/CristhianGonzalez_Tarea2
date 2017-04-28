@@ -105,15 +105,41 @@ int main(){
   }
   
   // We write the files in case we don't reach any one radii
-  /*FILE *filer10;
+  FILE *filer10;
   FILE *filer60;
-  FILE *filer120;*/
+  FILE *filer120;
+  filer10=fopen("r10.txt","w");
+  filer60=fopen("r60.txt","w");
+  filer120=fopen("r120.txt","w");
+
+  for(i=0;i<66;i++){
+    fprintf(filer10,"1.0");
+    fprintf(filer60,"1.0");
+    fprintf(filer120,"1.0");
+  }
   
-  
-  
+  fclose(filer10);
+  fclose(filer60);
+  fclose(filer120);
+
+  FILE *filet10;
+  FILE *filet60;
+  FILE *filet120;
+  filet10=fopen("t10.txt","w");
+  filet60=fopen("t60.txt","w");
+  filet120=fopen("t120.txt","w");
+
+  fprintf(filet10,"0.0");
+  fprintf(filet60,"0.0");
+  fprintf(filet120,"0.0");
+
+  fclose(filet10);
+  fclose(filet60);
+  fclose(filet120);
+
   // We advance our system in timesteps of dt calculated at each step
   int Nt,n,l;
-  Nt=1000;
+  Nt=10000000;
   
   double dt,t_total;
   t_total=0.0;
@@ -125,8 +151,6 @@ int main(){
   
   for(n=0;n<Nt;n++){
     dt=delta_time(w_now);
-    //printf("dt=%f t=%f E=%f r(10)=%f \n",dt*256.0/a_atm,t_total*256.0/a_atm,w_now[M/2][M/2][M/2][4],w_now[M/2][M/2][M/2+5][0]);
-    printf("%.20f\t%.20f\t%.20f\t%.20f\t%.20f\t%.20f\n",w_now[M/2][M/2][M/2][0],w_now[M/2][M/2][M/2+2][0],w_now[M/2][M/2][M/2+4][0],w_now[M/2][M/2][M/2+6][0],w_now[M/2][M/2][M/2+8][0],w_now[M/2][M/2][M/2+10][0]);
 
     t_total=t_total+dt;
 
