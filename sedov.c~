@@ -368,7 +368,7 @@ void write_rho(int pos, double ****w,double time){
     
     prom=sum/n_cubes;
     
-    fprintf(filer,"%f \n",prom);
+    printf(filer,"%f \n",prom);
 
   }
   
