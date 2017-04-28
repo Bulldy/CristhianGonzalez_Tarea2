@@ -112,10 +112,10 @@ int main(){
   filer60=fopen("r60.txt","w");
   filer120=fopen("r120.txt","w");
 
-  for(i=0;i<66;i++){
-    fprintf(filer10,"1.0");
-    fprintf(filer60,"1.0");
-    fprintf(filer120,"1.0");
+  for(i=0;i<65;i++){
+    fprintf(filer10,"1.0 \n");
+    fprintf(filer60,"1.0 \n");
+    fprintf(filer120,"1.0 \n");
   }
   
   fclose(filer10);
@@ -139,7 +139,7 @@ int main(){
 
   // We advance our system in timesteps of dt calculated at each step
   int Nt,n,l;
-  Nt=10000000;
+  Nt=100000000;
   
   double dt,t_total;
   t_total=0.0;

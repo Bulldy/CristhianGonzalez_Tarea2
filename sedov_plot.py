@@ -11,6 +11,8 @@ t10=np.genfromtxt("t10.txt")
 t60=np.genfromtxt("t60.txt")
 t120=np.genfromtxt("t120.txt")
 
+print(len(rho10))
+
 r=np.linspace(0,128,65)
 
 fig1=plt.figure()
